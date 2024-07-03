@@ -31,22 +31,13 @@ stages {
                            withSonarQubeEnv("Sonar") {
                                  sh "echo ======= SCANSERVER"
 
-                                sh '''${scannerHome}/bin/sonar-scanner -X -Dsonar.projectKey=test1 \
-                                  -Dsonar.projectName=test1 \
-                                  -Dsonar.projectVersion=1.0 \
-                                  -Dsonar.sources=src/ \
-                                  -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
-                                  -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                                  -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                                  -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
-
                                  sh '''mvn clean verify sonar:sonar -Dsonar.projectKey=test1 \
                                             -Dsonar.projectName='test1' \
                                             -Dsonar.host.url=https//:172.30.0.4:9000\
-                                            -Dsonar.token=sqb_6c3f49db27fcb9a46b823d73601d99df1c192812'''
+                                            -Dsonar.token=sqb_972cb514be695d4a7918c639da44298024e0a863'''
                                  sh 'pwd'
 
-                                 //sh 'mvn clean package sonar:sonar' //mvn clean verify sonar:sonar
+
                              }
                          }
                      }
