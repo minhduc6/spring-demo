@@ -56,36 +56,4 @@ pipeline {
                 }
             }
         }
-
-//         stage('Build Docker Image') {
-//             steps {
-//                 script {
-//                     dockerImage = docker.build("${registry}:${env.BUILD_NUMBER}")
-//                 }
-//             }
-//         }
-//
-//         stage('Deploy Docker Image') {
-//             steps {
-//                 script {
-//                     docker.withRegistry('', registryCredential) {
-//                         dockerImage.push()
-//                     }
-//                 }
-//             }
-//         }
-//
-//         stage('Clean Up Docker Images') {
-//             steps {
-//                 sh "docker rmi ${registry}:${env.BUILD_NUMBER}"
-//             }
-//         }
-//     }
-
-//     post {
-//         always {
-//             junit '**/target/surefire-reports/*.xml'
-//             cleanWs()
-//         }
-//     }
 }
