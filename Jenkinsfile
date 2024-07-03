@@ -42,7 +42,7 @@ stages {
 
                                  sh '''mvn clean verify sonar:sonar -Dsonar.projectKey=demo \
                                             -Dsonar.projectName='demo' \
-                                            -Dsonar.host.url=https//:sonarqube:9001\
+                                            -Dsonar.host.url=https//:172.30.0.4:9000\
                                             -Dsonar.token=squ_6a6e199e7dc29cdf4e7f1485ed7765b8a545eee1'''
 
                                  sh '''mvn clean verify sonar:sonar -Dsonar.projectKey=demo \
