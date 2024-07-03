@@ -33,7 +33,7 @@ stages {
 
                                  sh '''mvn clean verify sonar:sonar -X -Dsonar.projectKey=test1 \
                                             -Dsonar.projectName='test1' \
-                                            -Dsonar.host.url=http//172.30.0.4:9000\
+                                            -Dsonar.host.url=http://172.30.0.4:9000\
                                             -Dsonar.token=sqb_972cb514be695d4a7918c639da44298024e0a863'''
                                  sh 'pwd'
 
