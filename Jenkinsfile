@@ -31,8 +31,8 @@ stages {
                            withSonarQubeEnv("Sonar") {
                                  sh "echo ======= SCANSERVER"
 
-                                sh '''${scannerHome}/bin/sonar-scanner -X -Dsonar.projectKey=demo \
-                                  -Dsonar.projectName=demo \
+                                sh '''${scannerHome}/bin/sonar-scanner -X -Dsonar.projectKey=test1 \
+                                  -Dsonar.projectName=test1 \
                                   -Dsonar.projectVersion=1.0 \
                                   -Dsonar.sources=src/ \
                                   -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
@@ -40,13 +40,11 @@ stages {
                                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
                                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
 
-                                 sh '''mvn clean verify sonar:sonar -Dsonar.projectKey=demo \
-                                            -Dsonar.projectName='demo' \
+                                 sh '''mvn clean verify sonar:sonar -Dsonar.projectKey=test1 \
+                                            -Dsonar.projectName='test1' \
                                             -Dsonar.host.url=https//:172.30.0.4:9000\
-                                            -Dsonar.token=squ_6a6e199e7dc29cdf4e7f1485ed7765b8a545eee1'''
-
-                                 sh '''mvn clean verify sonar:sonar -Dsonar.projectKey=demo \
-                                            -Dsonar.projectName='demo' '''
+                                            -Dsonar.token=sqb_6c3f49db27fcb9a46b823d73601d99df1c192812'''
+                                 sh 'pwd'
 
                                  //sh 'mvn clean package sonar:sonar' //mvn clean verify sonar:sonar
                              }
