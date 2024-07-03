@@ -22,6 +22,37 @@ stages {
                        sh 'mvn clean install'
                    }
                }
+
+               stage('SonarQube analysis') {
+                         environment {
+                            scannerHome = tool "Sonar"
+                         }
+                         steps {
+                           withSonarQubeEnv("Sonar") {
+                                 sh "echo ======= SCANSERVER"
+
+                                sh '''${scannerHome}/bin/sonar-scanner -X -Dsonar.projectKey=demo \
+                                  -Dsonar.projectName=demo \
+                                  -Dsonar.projectVersion=1.0 \
+                                  -Dsonar.sources=src/ \
+                                  -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
+                                  -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                                  -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                                  -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+
+                                 sh '''mvn clean verify sonar:sonar -Dsonar.projectKey=demo \
+                                            -Dsonar.projectName='demo' \
+                                            -Dsonar.host.url=https//:sonarqube:9001\
+                                            -Dsonar.token=squ_6a6e199e7dc29cdf4e7f1485ed7765b8a545eee1'''
+
+                                 sh '''mvn clean verify sonar:sonar -Dsonar.projectKey=demo \
+                                            -Dsonar.projectName='demo' '''
+
+                                 //sh 'mvn clean package sonar:sonar' //mvn clean verify sonar:sonar
+                             }
+                         }
+                     }
+
                stage('Test') {
                    steps {
                        sh 'mvn test'
