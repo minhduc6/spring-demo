@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/minhduc6/spring-demo.git'
+                git 'git@github.com:minhduc6/spring-demo.git'
             }
         }
 
@@ -35,10 +35,9 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh """
-                        mvn sonar:sonar \
-                        -Dsonar.projectKey=your-project-key \
-                        -Dsonar.host.url=${SONARQUBE_URL} \
-                        -Dsonar.login=${SONARQUBE_TOKEN}
+                        mvn sonar:sonar 
+                        -Dsonar.host.url=${env.SONARQUBE_URL} \
+                        -Dsonar.login=${env.SONARQUBE_TOKEN}
                     """
                 }
             }
@@ -50,10 +49,9 @@ pipeline {
                     def qg = waitForQualityGate()
                     if (qg.status != 'OK') {
                         error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                    } else {
-                       echo 'Sonar Success'
                     }
                 }
             }
         }
+    }
 }
