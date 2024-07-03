@@ -3,84 +3,89 @@ pipeline {
         registry = "tuanph2020/test"
         registryCredential = 'dockerhub_id'
         dockerImage = ''
-        SONAR_HOST_URL = 'http://localhost:9000'  // Update with your SonarQube server URL
-        // SONAR_LOGIN_TOKEN = credentials('squ_f2ea71f555307696657d40f5d214a097fe950a47')  // Use Jenkins credentials to securely store your SonarQube token
-//         SONAR_LOGIN_TOKEN = 'squ_f2ea71f555307696657d40f5d214a097fe950a47'
+        SONARQUBE_URL = 'http://172.30.0.4'  // Update with your SonarQube server URL
+        SONARQUBE_TOKEN = 'squ_f2ea71f555307696657d40f5d214a097fe950a47'  // Use Jenkins credentials to securely store your SonarQube token
     }
     agent any
-        tools {
-            maven 'Maven'
-        }
-stages {
-         stage('Checkout') {
-                   steps {
-                       git 'https://github.com/minhduc6/spring-demo.git'
-                   }
-               }
-               stage('Build') {
-                   steps {
-                       sh 'mvn clean install'
-                   }
-               }
-               stage('Test') {
-                   steps {
-                       sh 'mvn test'
-                   }
-               }
-               stage('Deploy') {
-                   steps {
-                       echo 'Deploying...'
-                       // Add your deployment steps here
-                   }
-               }
-//         stage('Cloning our Git') {
-//             steps {
-//                 deleteDir()
-//                 script {
-//                 sh 'git config --global --add safe.directory "*"'
-//                 }
-//                 checkout scm
-//             }
-//         }
-//         stage('Build App') {
-//             tools {
-//                 jdk "jdk" // the name you have given the JDK installation using the JDK manager (Global Tool Configuration)
-//             }
-//             steps {
-//                 sh 'env'
-//                 sh 'echo "## compile"'
-//                 sh 'mvn compile'
-//                 sh 'echo "## build image"'
-//             //    sh 'docker build -t test/spring--boot-hello:latest .'
-//             }
-//         }
 
-//         stage('Build and SonarQube Analysis') {
-//                     steps {
-//                         // Build the project and run SonarQube analysis
-//                         sh "mvn clean verify sonar:sonar -Dsonar.projectName='PROJECT_NAME'  -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_LOGIN_TOKEN}"
-//                     }
-//         }
-//         stage('Building image') {
-//             steps{
+    tools {
+        maven 'Maven'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/minhduc6/spring-demo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh """
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=your-project-key \
+                        -Dsonar.host.url=${SONARQUBE_URL} \
+                        -Dsonar.login=${SONARQUBE_TOKEN}
+                    """
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                script {
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    } else {
+                       echo 'Sonar Success'
+                    }
+                }
+            }
+        }
+
+//         stage('Build Docker Image') {
+//             steps {
 //                 script {
-//                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
+//                     dockerImage = docker.build("${registry}:${env.BUILD_NUMBER}")
 //                 }
 //             }
 //         }
-//         stage('Deploy image') {
-//             steps{
+//
+//         stage('Deploy Docker Image') {
+//             steps {
 //                 script {
-//                     docker.withRegistry( '', registryCredential ) {
+//                     docker.withRegistry('', registryCredential) {
 //                         dockerImage.push()
 //                     }
 //                 }
 //             }
 //         }
-//         stage('Cleaning up') {
-//             steps{
-//                 sh "docker rmi $registry:$BUILD_NUMBER"
+//
+//         stage('Clean Up Docker Images') {
+//             steps {
+//                 sh "docker rmi ${registry}:${env.BUILD_NUMBER}"
 //             }
 //         }
-    }
+//     }
+
+//     post {
+//         always {
+//             junit '**/target/surefire-reports/*.xml'
+//             cleanWs()
+//         }
+//     }
 }
