@@ -3,7 +3,7 @@ pipeline {
         registry = "tuanph2020/test"
         registryCredential = 'dockerhub_id'
         dockerImage = ''
-        SONAR_HOST_URL = 'http://localhost:9000'  // Update with your SonarQube server URL
+         // Update with your SonarQube server URL
         // SONAR_LOGIN_TOKEN = credentials('squ_f2ea71f555307696657d40f5d214a097fe950a47')  // Use Jenkins credentials to securely store your SonarQube token
 //         SONAR_LOGIN_TOKEN = 'squ_f2ea71f555307696657d40f5d214a097fe950a47'
     }
@@ -31,9 +31,9 @@ stages {
                            withSonarQubeEnv("Sonar") {
                                  sh "echo ======= SCANSERVER"
 
-                                 sh '''mvn clean verify sonar:sonar -Dsonar.projectKey=test1 \
+                                 sh '''mvn clean verify sonar:sonar -X -Dsonar.projectKey=test1 \
                                             -Dsonar.projectName='test1' \
-                                            -Dsonar.host.url=http//:172.30.0.4:9000\
+                                            -Dsonar.host.url=http//172.30.0.4:9000\
                                             -Dsonar.token=sqb_972cb514be695d4a7918c639da44298024e0a863'''
                                  sh 'pwd'
 
