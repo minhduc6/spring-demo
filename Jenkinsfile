@@ -46,7 +46,7 @@ stages {
                              sh "echo ======= ENDING"
                              script {
                                timeout(time: 5, unit: 'MINUTES') {
-                                 def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+                                 def qg = waitForQualityGate(webhookSecretId: '1234567891234567') // Reuse taskId previously collected by withSonarQubeEnv
                                  if (qg.status != 'OK') {
                                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
                                  }
