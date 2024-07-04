@@ -37,11 +37,24 @@ stages {
                                             -Dsonar.login=admin \
                                             -Dsonar.password=123456 '''
                                  sh 'pwd'
-
-
                              }
                          }
                      }
+
+                 stage('QUALITY GATE') {
+                           steps {
+                             sh "echo ======= ENDING"
+                             script {
+                               timeout(time: 5, unit: 'MINUTES') {
+                                 def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+                                 if (qg.status != 'OK') {
+                                   error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                                 }
+                                 waitForQualityGate abortPipeline: true
+                               }
+                             }
+                           }
+                 }
 
                stage('Test') {
                    steps {
