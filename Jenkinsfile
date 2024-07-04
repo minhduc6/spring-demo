@@ -1,4 +1,9 @@
 pipeline {
+    environment {
+        registry = "minhduc611/spring-demo"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+    }
     agent any
     tools {
         maven 'Maven'
@@ -50,16 +55,19 @@ pipeline {
             }
         }
         stage('Docker Build') {
-            steps {
-                sh 'docker build -t minhduc6/spring-demo:latest .'
-            }
+             steps {
+                   script {
+                       dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                   }
+             }
         }
         stage('Deploy') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-                    sh 'docker push minhduc6/spring-demo:latest'
-                }
+            steps{
+                   script {
+                               docker.withRegistry( '', registryCredential ) {
+                               dockerImage.push()
+                        }
+                   }
             }
         }
     }
