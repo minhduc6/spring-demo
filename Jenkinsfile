@@ -28,7 +28,7 @@ stages {
                             scannerHome = tool "Sonar"
                          }
                          steps {
-                           withSonarQubeEnv("Sonar") {
+                           withSonarQubeEnv(credentialsId: 'token_sonar', installationName: 'Sonar') {
                                  sh "echo ======= SCANSERVER"
 
                                  sh '''mvn clean verify sonar:sonar -X -Dsonar.projectKey=test1 \
@@ -45,7 +45,7 @@ stages {
                              sh "echo ======= ENDING"
                              script {
                                timeout(time: 5, unit: 'MINUTES') {
-                                 def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+                                 def qg = waitForQualityGate(webhookSecretId:'sonar-text-check') // Reuse taskId previously collected by withSonarQubeEnv
                                  if (qg.status != 'OK') {
                                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
                                  }
