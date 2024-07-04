@@ -51,14 +51,14 @@ pipeline {
         }
         stage('Docker Build') {
             steps {
-                sh 'Docker build -t minhduc6/spring-demo:latest .'
+                sh 'docker build -t minhduc6/spring-demo:latest .'
             }
         }
         stage('Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-                    sh "Docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-                    sh 'Docker push minhduc6/spring-demo:latest'
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                    sh 'docker push minhduc6/spring-demo:latest'
                 }
             }
         }
