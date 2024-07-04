@@ -63,55 +63,6 @@ stages {
                         sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
                         sh 'docker push minhduc6/spring-demo:latest'
                    }
-               }
-//         stage('Cloning our Git') {
-//             steps {
-//                 deleteDir()
-//                 script {
-//                 sh 'git config --global --add safe.directory "*"'
-//                 }
-//                 checkout scm
-//             }
-//         }
-//         stage('Build App') {
-//             tools {
-//                 jdk "jdk" // the name you have given the JDK installation using the JDK manager (Global Tool Configuration)
-//             }
-//             steps {
-//                 sh 'env'
-//                 sh 'echo "## compile"'
-//                 sh 'mvn compile'
-//                 sh 'echo "## build image"'
-//             //    sh 'docker build -t test/spring--boot-hello:latest .'
-//             }
-//         }
-
-//         stage('Build and SonarQube Analysis') {
-//                     steps {
-//                         // Build the project and run SonarQube analysis
-//                         sh "mvn clean verify sonar:sonar -Dsonar.projectName='PROJECT_NAME'  -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_LOGIN_TOKEN}"
-//                     }
-//         }
-//         stage('Building image') {
-//             steps{
-//                 script {
-//                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
-//                 }
-//             }
-//         }
-//         stage('Deploy image') {
-//             steps{
-//                 script {
-//                     docker.withRegistry( '', registryCredential ) {
-//                         dockerImage.push()
-//                     }
-//                 }
-//             }
-//         }
-//         stage('Cleaning up') {
-//             steps{
-//                 sh "docker rmi $registry:$BUILD_NUMBER"
-//             }
-//         }
+              }
     }
 }
