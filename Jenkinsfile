@@ -1,12 +1,4 @@
 pipeline {
-    environment {
-        registry = "tuanph2020/test"
-        registryCredential = 'dockerhub_id'
-        dockerImage = ''
-         // Update with your SonarQube server URL
-        // SONAR_LOGIN_TOKEN = credentials('squ_f2ea71f555307696657d40f5d214a097fe950a47')  // Use Jenkins credentials to securely store your SonarQube token
-//         SONAR_LOGIN_TOKEN = 'squ_f2ea71f555307696657d40f5d214a097fe950a47'
-    }
     agent any
         tools {
             maven 'Maven'
@@ -67,13 +59,9 @@ stages {
                    }
                stage('Deploy') {
                    steps {
-                       steps {
-                               withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-                                 sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-                                 sh 'docker push minhduc6/spring-demo:latest'
-                               }
-                       echo 'Deploying...'
-                       // Add your deployment steps here
+                        withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                        sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                        sh 'docker push minhduc6/spring-demo:latest'
                    }
                }
 //         stage('Cloning our Git') {
